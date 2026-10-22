@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moneycarlo"
+version = "0.1.0"
+description = "Monte Carlo simulation engine for NFL game and player predictions"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "nflreadpy>=0.1.5",
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "pyarrow>=14",
+    "scikit-learn>=1.3",
+    "duckdb>=1.0",
+    "streamlit>=1.30",
+    "plotly>=5.18",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+moneycarlo = "moneycarlo.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["moneycarlo*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
