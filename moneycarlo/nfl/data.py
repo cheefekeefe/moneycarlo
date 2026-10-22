@@ -188,7 +188,7 @@ def load_season_tables(season: int, refresh: bool = False) -> tuple[pd.DataFrame
     dpath, tpath, cpath = (_cache_path(n, season) for n in ("drives", "team_games", "consts"))
     if not refresh and dpath.exists() and tpath.exists():
         return pd.read_parquet(dpath), pd.read_parquet(tpath)
-    log.info("Downloading play-by-play for %s", season)
+    log.info("Downloading %s play-by-play...", season)
     pbp = _nfl().load_pbp([season]).select(_PBP_COLUMNS).to_pandas()
     drives, tg, consts = _summarise_pbp(pbp)
     drives.to_parquet(dpath, index=False)
@@ -279,9 +279,11 @@ def load_depth_charts(season: int, refresh: bool = False) -> pd.DataFrame:
 def update(seasons: list[int]) -> None:
     """Refresh the current season's data (and fill any missing past seasons)."""
     cur = current_season()
+    log.info("Refreshing NFL data (the first run downloads %d seasons and takes a few minutes)...", len(seasons))
     load_schedules(refresh=True)
     for s in seasons:
         load_season_tables(s, refresh=(s == cur))
+    log.info("Downloading player stats, injury reports and depth charts...")
     load_player_stats(seasons, refresh_current=True)
     load_injuries(cur, refresh=True)
     load_depth_charts(cur, refresh=True)

@@ -15,13 +15,20 @@ All data is free, from [nflverse](https://github.com/nflverse) via `nflreadpy`. 
 
 ## Quick start
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -e .
+Requires Python 3.10+.
 
-moneycarlo predict          # downloads data (first run ~1 min), simulates the next week
-moneycarlo dashboard        # opens the dashboard in your browser
+```bash
+git clone https://github.com/cheefekeefe/moneycarlo.git && cd moneycarlo
+python3 -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\Activate.ps1
+python -m pip install -e .
+
+python -m moneycarlo predict         # first run downloads ~11 seasons (a few minutes), then simulates the next week
+python -m moneycarlo dashboard       # opens http://localhost:8501
 ```
+
+Each new terminal session: `cd moneycarlo && source .venv/bin/activate` first. `moneycarlo <command>`
+works too when the virtual environment is active; `python -m moneycarlo` works even if it isn't on your PATH.
 
 Recommended once, to build a historical track record and tune the model:
 

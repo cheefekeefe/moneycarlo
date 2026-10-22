@@ -44,7 +44,7 @@ def build_context(last_season: int, params: SimParams | None = None,
     schedules = data.load_schedules()
     sched = schedules[schedules["season"].isin(seasons)].reset_index(drop=True)
     drives, tg = data.load_history(seasons)
-    log.info("Computing team ratings for %s-%s", seasons[0], seasons[-1])
+    log.info("Computing team ratings for %s-%s...", seasons[0], seasons[-1])
     ratings, beta = compute_ratings(sched, tg, params)
     matchups = matchup_frame(sched, ratings)
     gameday = sched.set_index("game_id")["gameday"]
@@ -176,6 +176,7 @@ def predict_week(
     games = ctx.schedules[(ctx.schedules["season"] == season) & (ctx.schedules["week"] == week)]
     if games.empty:
         raise ValueError(f"No games found for {season} week {week}")
+    log.info("Simulating %d games (%s week %s, %s sims each)...", len(games), season, week, f"{ctx.params.n_sims:,}")
     model = fit_model(ctx, games["gameday"].min())
     inputs = game_inputs(ctx, model, games)
     rng = np.random.default_rng(seed)

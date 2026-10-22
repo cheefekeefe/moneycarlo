@@ -119,7 +119,7 @@ def _print_summary(title: str, s: dict) -> None:
 
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="moneycarlo", description="NFL Monte Carlo prediction engine")
-    ap.add_argument("-v", "--verbose", action="store_true")
+    ap.add_argument("-q", "--quiet", action="store_true", help="hide progress messages")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("update", help="download latest data and store results").set_defaults(func=cmd_update)
@@ -152,7 +152,9 @@ def main(argv=None):
     sub.add_parser("dashboard", help="launch the Streamlit dashboard").set_defaults(func=cmd_dashboard)
 
     args = ap.parse_args(argv)
-    logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING, format="%(message)s")
+    logging.basicConfig(level=logging.WARNING, format="%(message)s")
+    # Progress messages from this package only (third-party libraries stay quiet).
+    logging.getLogger("moneycarlo").setLevel(logging.WARNING if args.quiet else logging.INFO)
     args.func(args)
 
 
